@@ -16,7 +16,7 @@
   --cream:   #fff8fb;
 
   --ink:     #5b4a63;   /* soft purple-gray text */
-  --ink-soft:#8a7b92;
+  --ink-soft:#7b6c84;   /* darkened for legibility (AA on light bg) */
   --white:   #ffffff;
 
   --good:    #38c79a;
@@ -147,8 +147,13 @@ body { padding-bottom: 110px; } /* room for tab bar */
 .journey { margin: 18px 0 6px; }
 .journey-track {
   position: relative; height: 70px;
-  background: linear-gradient(#ffffffaa,#ffffff55); border-radius: 20px;
-  border: 1.5px dashed #d8c4ec; overflow: hidden;
+  /* a tiny landscape: soft sky up top fading to meadow at the path */
+  background: linear-gradient(180deg, #eef7ff 0%, #f3edff 52%, #e7f7ee 100%);
+  border-radius: 20px; border: 1.5px dashed #d8c4ec; overflow: hidden;
+}
+.journey-track::after { /* grassy ground the walker strolls on */
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 12px;
+  background: linear-gradient(#bfead2, #a8e6cf); opacity: .55; z-index: 0;
 }
 .journey-fill {
   position: absolute; left: 0; top: 0; bottom: 0;
@@ -320,6 +325,20 @@ body { padding-bottom: 110px; } /* room for tab bar */
 .right { text-align: right; }
 .center { text-align: center; }
 a { color: #8a63c0; font-weight: 800; }
+
+/* ---------- Polish: steady numerals + keyboard focus ---------- */
+/* Tabular figures keep money values from shifting width as the count-up ticks. */
+.hero .big-amount, .stat .val, .item .amt, .level-badge b, .xp-bar .label,
+.ring text, .countdown, .reward { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+:focus-visible { outline: none; }
+.btn:focus-visible, .header-chip:focus-visible, .tabbar button:focus-visible,
+.fab:focus-visible, .seg button:focus-visible, .quest:focus-visible, .gcard:focus-visible {
+  outline: 3px solid var(--lilac); outline-offset: 3px; border-radius: 16px;
+}
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible {
+  outline: 3px solid var(--lilac); outline-offset: 1px;
+}
 .code { font-family: ui-monospace, monospace; background: #fff; padding: 2px 7px; border-radius: 8px; border: 1.5px solid #efe3f4; font-size: .82rem; }
 .section-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 2px 12px; }
 .section-head h2 { font-family: var(--font-head); font-size: 1.3rem; margin: 0; }
