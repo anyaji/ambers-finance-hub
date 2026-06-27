@@ -1,0 +1,14 @@
+{
+  "name": "Amber's Finance Hub",
+  "short_name": "Amber's Hub",
+  "description": "A cute, game-like finance tracker on the road to our house.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fde9f3",
+  "theme_color": "#f7b5d3",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "meta": { "version": 1, "lastUpdated": null, "currency": "USD" },
+  "goal": {
+    "name": "Our First House",
+    "emoji": "🏡",
+    "targetDate": "2026-12-15",
+    "downPaymentTarget": 40000,
+    "extraCostsTarget": 8000,
+    "startedOn": "2026-06-01"
+  },
+  "access": {
+    "enabled": true,
+    "codes": { "AMBER-LOVE-2026": "Amber", "AVEL-HERO-2026": "Avel" },
+    "devices": []
+  },
+  "income": [],
+  "savings": [
+    { "id": "house", "name": "House Down Payment", "emoji": "🏠", "type": "house", "balance": 0, "target": 40000, "history": [] },
+    { "id": "emerg", "name": "Emergency Fund", "emoji": "🛟", "type": "emergency", "balance": 0, "target": 6000, "history": [] }
+  ],
+  "debts": [],
+  "bills": [],
+  "subscriptions": [],
+  "quests": [],
+  "customQuests": [],
+  "earnedBadges": [],
+  "games": { "xp": 0, "stats": {} },
+  "activity": [],
+  "notify": { "recipients": [], "weeklyDay": "Sun" }
+}

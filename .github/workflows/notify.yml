@@ -1,0 +1,32 @@
+name: Amber's Hub — Text Update
+
+# Sends a free carrier email-to-text summary on a schedule + on demand.
+on:
+  schedule:
+    # 16:00 UTC Sundays ≈ 9am PT / 11am CT. Adjust as you like.
+    - cron: '0 16 * * 0'
+  workflow_dispatch: {}   # lets you press "Run workflow" manually anytime
+
+jobs:
+  text-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build summary + recipients
+        id: prep
+        run: node scripts/notify.mjs
+
+      - name: Send the text(s)
+        if: steps.prep.outputs.to != ''
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          from: Amber's Hub <${{ secrets.GMAIL_USER }}>
+          to: ${{ steps.prep.outputs.to }}
+          subject: ${{ steps.prep.outputs.subject }}
+          body: ${{ steps.prep.outputs.body }}
