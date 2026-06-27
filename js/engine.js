@@ -29,9 +29,11 @@
     var totalDebtStart = sum(s.debts, function (d) { return d.originalBalance || d.balance; });
     var debtPaid = Math.max(0, totalDebtStart - totalDebt);
 
-    var house = s.savings.find(function (x) { return x.type === 'house'; }) || { balance: 0, target: s.goal.downPaymentTarget };
+    // Only money earmarked for the house (type 'house' buckets) counts toward
+    // the house goal — the emergency fund / fun buckets must NOT inflate it.
+    var houseSaved = sum(s.savings.filter(function (x) { return x.type === 'house'; }), function (x) { return x.balance; });
     var houseGoal = (s.goal.downPaymentTarget || 0) + (s.goal.extraCostsTarget || 0);
-    var housePct = houseGoal > 0 ? clamp(totalSaved / houseGoal) : 0;
+    var housePct = houseGoal > 0 ? clamp(houseSaved / houseGoal) : 0;
 
     var net = totalSaved - totalDebt;
 
@@ -49,10 +51,10 @@
       debtStart: totalDebtStart,
       debtPct: totalDebtStart > 0 ? clamp(debtPaid / totalDebtStart) : 0,
       net: net,
-      houseBalance: house.balance,
+      houseBalance: houseSaved,
       houseGoal: houseGoal,
       housePct: housePct,
-      houseRemaining: Math.max(0, houseGoal - totalSaved)
+      houseRemaining: Math.max(0, houseGoal - houseSaved)
     };
   }
 
@@ -61,8 +63,8 @@
   /* ---------- Days/countdown ---------- */
   function daysUntil(dateStr) {
     var t = new Date(dateStr + 'T00:00:00');
-    var now = new Date();
-    return Math.ceil((t - now) / 86400000);
+    var now = new Date(); now.setHours(0, 0, 0, 0); // compare date-only
+    return Math.round((t - now) / 86400000);
   }
 
   // On-track projection: at current surplus, do we hit the house goal by target date?
@@ -88,7 +90,7 @@
   }
 
   /* ---------- XP & Levels ---------- */
-  // XP: $1 saved = 1xp, $1 debt paid = 1xp, +250 per completed quest/badge.
+  // XP: $1 saved = 1xp, $1 debt paid = 1xp, +250 per earned badge, +150 per completed quest, + game XP.
   function xp(s) {
     var m = metrics(s);
     var base = Math.round(m.totalSaved + m.debtPaid);
@@ -125,7 +127,7 @@
       return {
         pct: p,
         amount: Math.round(goal * p),
-        hit: m.totalSaved >= goal * p,
+        hit: m.houseBalance >= goal * p,
         label: p === 1 ? 'KEYS! 🔑' : Math.round(p * 100) + '%'
       };
     });
@@ -142,7 +144,7 @@
     push('first-500', '🌷', 'Little Sprout', 'Save your first $500', m.totalSaved >= 500, 'Coffee date on me ☕', clamp(m.totalSaved / 500));
     push('first-1k', '🌸', 'Thousandaire', 'Reach $1,000 saved', m.totalSaved >= 1000, 'Movie night 🍿', clamp(m.totalSaved / 1000));
     push('emergency', '🛟', 'Safety Net', 'Build a $1,000 emergency fund', emergencyBal(s) >= 1000, 'Peace of mind 😌', clamp(emergencyBal(s) / 1000));
-    push('debt-dent', '⚔️', 'Debt Slayer I', 'Pay off your first $500 of debt', m.debtPaid >= 500, 'Treat yourself 🎁', m.debtStart ? clamp(m.debtPaid / 500) : (m.debtStart === 0 ? 1 : 0));
+    push('debt-dent', '⚔️', 'Debt Slayer I', 'Pay off your first $500 of debt', m.debtPaid >= 500, 'Treat yourself 🎁', m.debtStart ? clamp(m.debtPaid / 500) : 0);
     push('halfway', '🏞️', 'Halfway There', 'Reach 50% of the house goal', m.housePct >= 0.5, 'Fancy dinner 🍝', clamp(m.housePct / 0.5));
     push('positive-net', '⚖️', 'In the Green', 'Get total savings above total debt', m.net > 0, 'Bragging rights 💪');
     push('saver-rate', '📈', 'Super Saver', 'Save 20%+ of monthly income', m.savingsRate >= 0.2, 'New plant for the home 🪴', clamp(m.savingsRate / 0.2));

@@ -120,11 +120,31 @@
 
   /* ---------- Import / export ---------- */
   function exportJSON() { return JSON.stringify(state, null, 2); }
-  function importJSON(text) {
+  function importJSON(text, opts) {
+    opts = opts || {};
     var parsed = JSON.parse(text);
+    var keepTs = opts.keepTimestamp && parsed.meta && parsed.meta.lastUpdated;
     state = migrate(parsed);
-    persist(true);
+    if (keepTs) {
+      // Preserve the source timestamp (sync conflict resolution relies on it)
+      // and save locally WITHOUT re-stamping or triggering a push echo.
+      state.meta.lastUpdated = keepTs;
+      try { localStorage.setItem(LS_DATA, JSON.stringify(state)); } catch (e) {}
+      emit();
+    } else {
+      persist(true);
+    }
     return true;
+  }
+
+  // Has the user entered anything real yet? Lets a fresh device accept the
+  // cloud copy on first sync instead of being blocked by a "newer" empty seed.
+  function hasUserData(s) {
+    s = s || state;
+    return !!((s.income && s.income.length) || (s.debts && s.debts.length) ||
+      (s.bills && s.bills.length) || (s.subscriptions && s.subscriptions.length) ||
+      (s.savings && s.savings.some(function (x) { return x.balance > 0; })) ||
+      (s.games && s.games.xp > 0) || (s.activity && s.activity.length));
   }
   function resetAll() { state = seed(); persist(true); }
 
@@ -155,7 +175,8 @@
     };
     localStorage.setItem(LS_DEVICE, JSON.stringify(dev));
     update(function (s) {
-      s.access.devices = (s.access.devices || []).filter(function (d) { return d.deviceId !== dev.deviceId; });
+      // Dedup by owner+device name (deviceId is random each activation).
+      s.access.devices = (s.access.devices || []).filter(function (d) { return !(d.owner === dev.owner && d.name === dev.name); });
       s.access.devices.push({ owner: dev.owner, deviceId: dev.deviceId, name: dev.name, activatedAt: dev.activatedAt });
     });
     return owner;
@@ -179,7 +200,7 @@
   window.Store = {
     load: load, get: get, update: update, persist: persist, subscribe: subscribe,
     logActivity: logActivity, uid: uid, nowISO: nowISO,
-    exportJSON: exportJSON, importJSON: importJSON, resetAll: resetAll,
+    exportJSON: exportJSON, importJSON: importJSON, resetAll: resetAll, hasUserData: hasUserData,
     // access
     isActivated: isActivated, activate: activate, getDevice: getDevice,
     unbindThisDevice: unbindThisDevice

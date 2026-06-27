@@ -45,7 +45,7 @@
     ]));
     var heroNum = el('span', { text: money(0) });
     hero.appendChild(el('div', { class: 'big-amount' }, [heroNum, el('small', { text: ' of ' + money(m.houseGoal) })]));
-    if (window.FX) FX.moneyUp(heroNum, m.totalSaved, { dur: 1100 }); else heroNum.textContent = money(m.totalSaved);
+    if (window.FX) FX.moneyUp(heroNum, m.houseBalance, { dur: 1100 }); else heroNum.textContent = money(m.houseBalance);
 
     // Journey track with milestones
     var track = el('div', { class: 'journey-track' });
@@ -628,7 +628,7 @@
       el('div', { class: 'card-title' }, [el('span', { class: 'emoji', text: '☁️' }), 'GitHub Sync']),
       el('div', { class: 'hint', style: 'margin-bottom:10px', html: gh.repo ? ('Syncing to <b>' + gh.repo + '</b>. Both devices share the same numbers.') : 'Optional: keep both phones in sync via a private GitHub repo. (Works fine without it — data saves on each device.)' }),
       el('button', { class: 'btn ' + (gh.repo ? 'ghost' : 'primary') + ' block', text: gh.repo ? 'Edit sync settings' : 'Set up GitHub sync', onclick: editGitHub }),
-      gh.repo ? el('button', { class: 'btn ghost block', style: 'margin-top:8px', text: '⬇️ Pull latest now', onclick: function () { GitHubSync.pull().then(function () { UI.toast('Pulled latest', '☁️'); }).catch(function (e) { UI.toast('Pull failed: ' + e.message, '⚠️'); }); } }) : null
+      gh.repo ? el('button', { class: 'btn ghost block', style: 'margin-top:8px', text: '⬇️ Pull latest now', onclick: function () { GitHubSync.pull(true).then(function () { UI.toast('Pulled latest', '☁️'); }).catch(function (e) { UI.toast('Pull failed: ' + e.message, '⚠️'); }); } }) : null
     ]));
 
     // Access / device binding
@@ -739,7 +739,7 @@
       el('div', { class: 'btn-row' }, [
         el('button', { class: 'btn primary', style: 'flex:1', text: 'Save & test', onclick: function () {
           GitHubSync.setConfig({ repo: repo.value.trim(), token: token.value.trim(), path: path.value.trim() || 'data/finance.json' });
-          GitHubSync.pull().then(function (pulled) { UI.toast(pulled ? 'Connected & pulled!' : 'Connected (empty repo)', '☁️'); mdl.close(); })
+          GitHubSync.pull(true).then(function (pulled) { UI.toast(pulled ? 'Connected & pulled!' : 'Connected (empty repo)', '☁️'); mdl.close(); })
             .catch(function (e) { UI.toast('Could not connect: ' + e.message, '⚠️'); });
         } }),
         el('button', { class: 'btn ghost', text: 'Disconnect', onclick: function () { GitHubSync.setConfig(null); mdl.close(); UI.toast('Disconnected', '🔌'); } })

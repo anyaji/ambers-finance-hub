@@ -31,11 +31,12 @@ function summarize(s) {
   const monthlyMinDebt = sum(s.debts || [], d => d.minPayment || 0);
   const surplus = monthlyIncome - (monthlyBills + monthlySubs + monthlyMinDebt);
   const totalSaved = sum(s.savings || [], x => x.balance);
+  const houseSaved = sum((s.savings || []).filter(x => x.type === 'house'), x => x.balance);
   const totalDebt = sum(s.debts || [], d => d.balance);
   const debtStart = sum(s.debts || [], d => d.originalBalance || d.balance);
   const debtPaid = Math.max(0, debtStart - totalDebt);
   const goal = (s.goal?.downPaymentTarget || 0) + (s.goal?.extraCostsTarget || 0);
-  const pct = goal > 0 ? Math.round((totalSaved / goal) * 100) : 0;
+  const pct = goal > 0 ? Math.round((houseSaved / goal) * 100) : 0;
   const days = s.goal?.targetDate ? Math.ceil((new Date(s.goal.targetDate + 'T00:00:00') - new Date()) / 86400000) : null;
 
   // upcoming bills/subs in next 7 days
@@ -46,7 +47,8 @@ function summarize(s) {
 
   const lines = [
     "Amber's Hub update",
-    `Saved ${money(totalSaved)} of ${money(goal)} (${pct}%)`,
+    `House ${money(houseSaved)} of ${money(goal)} (${pct}%)`,
+    `Total saved ${money(totalSaved)}`,
     `Debt left ${money(totalDebt)}${debtPaid ? ` (paid ${money(debtPaid)})` : ''}`,
     `Free/mo ${money(surplus)}`,
     days != null ? (days > 0 ? `${days} days to the house` : 'House target reached!') : null,

@@ -148,7 +148,8 @@
     var s = Store.get(), m = Engine.metrics(s), lvl = Engine.levelInfo(s), proj = Engine.projection(s);
     var lines = [
       "Amber's Hub 🏡 update",
-      'Saved: ' + UI.money(m.totalSaved) + ' of ' + UI.money(m.houseGoal) + ' (' + UI.pct(m.housePct) + ')',
+      'House: ' + UI.money(m.houseBalance) + ' of ' + UI.money(m.houseGoal) + ' (' + UI.pct(m.housePct) + ')',
+      'Total saved: ' + UI.money(m.totalSaved),
       'Debt left: ' + UI.money(m.totalDebt) + (m.debtPaid ? ' (paid ' + UI.money(m.debtPaid) + ')' : ''),
       'Free/mo: ' + UI.money(Math.round(m.surplus)),
       proj.days > 0 ? ('Days to house: ' + proj.days) : 'House target reached!',
