@@ -195,6 +195,24 @@
     inp.click();
   }
 
+  /* ---------- Theme (device-specific, not synced) ---------- */
+  function getTheme() {
+    try {
+      var t = localStorage.getItem('afh_theme');
+      if (t) return t;
+      return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    } catch (e) { return 'light'; }
+  }
+  function setTheme(t) {
+    try { localStorage.setItem('afh_theme', t); } catch (e) {}
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    else document.documentElement.removeAttribute('data-theme');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#241634' : '#f7b5d3');
+    render();
+  }
+  function toggleTheme() { setTheme(getTheme() === 'dark' ? 'light' : 'dark'); UI.buzz(10); }
+
   /* ---------- Boot ---------- */
   function init() {
     Store.load();
@@ -215,7 +233,8 @@
     go: go, render: render, commit: commit, init: init,
     CARRIERS: CARRIERS, sendTextUpdate: sendTextUpdate, buildSummary: buildSummary,
     exportData: exportData, importData: importData,
-    awardGameXp: awardGameXp, recordGameStat: recordGameStat
+    awardGameXp: awardGameXp, recordGameStat: recordGameStat,
+    getTheme: getTheme, setTheme: setTheme, toggleTheme: toggleTheme
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

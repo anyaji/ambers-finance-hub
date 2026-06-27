@@ -15,6 +15,8 @@
       el('div', { class: 'spacer' }),
       el('button', { class: 'header-chip', title: 'Your level', onclick: function () { App.go('quests'); } },
         [el('span', { text: '⭐' }), el('span', { text: 'Lv ' + lvl.level })]),
+      el('button', { class: 'header-chip', title: 'Light / dark', style: 'padding:7px 11px', onclick: function () { App.toggleTheme(); } },
+        [el('span', { text: App.getTheme() === 'dark' ? '☀️' : '🌙' })]),
       el('button', { class: 'header-chip', title: 'Settings', style: 'padding:7px 11px', onclick: function () { App.go('settings'); } },
         [el('span', { text: '⚙️' })])
     ]);

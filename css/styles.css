@@ -363,6 +363,53 @@ a { color: #8a63c0; font-weight: 800; }
 .cc-token { position: absolute; width: 44px; height: 44px; display: grid; place-items: center; font-size: 1.9rem; cursor: pointer; transition: transform .15s, opacity .2s; animation: pop .2s both; user-select: none; }
 .cc-token.bomb { filter: drop-shadow(0 0 4px rgba(255,80,80,.5)); }
 
+/* ===========================================================
+   Dark mode — "moonlit pastel". Toggled via html[data-theme="dark"].
+   Keeps the cute accent colors, swaps surfaces + text for night.
+   =========================================================== */
+html[data-theme="dark"] {
+  --pink: #ef9fc6; --pink-2: #7a4f68; --lilac: #b9a4f0; --lilac-2: #3a3357;
+  --mint: #8fd8bd; --mint-2: #26433a; --peach: #e7b483; --sky: #7fb4d6; --lemon: #e4d98f;
+  --cream: #241b33;
+  --ink: #f1e9f7; --ink-soft: #bcaccb; --white: #2b2140;
+  --card-bg: rgba(46,35,68,0.62); --card-brd: rgba(255,255,255,0.10);
+  --shadow: 0 12px 34px rgba(0,0,0,0.5); --shadow-sm: 0 6px 16px rgba(0,0,0,0.42);
+}
+html[data-theme="dark"] body {
+  background: linear-gradient(160deg, #241634 0%, #1e1a3a 46%, #15242e 100%);
+}
+html[data-theme="dark"] .orb { opacity: .4; }
+html[data-theme="dark"] .hero {
+  background: linear-gradient(150deg, rgba(64,48,92,.9), rgba(122,79,104,.5) 55%, rgba(96,84,150,.62));
+}
+html[data-theme="dark"] .stat,
+html[data-theme="dark"] .item,
+html[data-theme="dark"] .badge,
+html[data-theme="dark"] .quest,
+html[data-theme="dark"] .mascot-wrap { background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.10); }
+html[data-theme="dark"] .quest.done { background: linear-gradient(100deg, rgba(56,199,154,.18), rgba(255,255,255,.04)); }
+html[data-theme="dark"] .bar, html[data-theme="dark"] .minibar { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.10); }
+html[data-theme="dark"] .journey-track { background: linear-gradient(180deg, #2b2452 0%, #2a2147 52%, #1b3a30 100%); border-color: rgba(255,255,255,0.16); }
+html[data-theme="dark"] .journey-track::after { background: linear-gradient(#2c5a45, #1f6b50); opacity: .6; }
+html[data-theme="dark"] .tabbar { background: rgba(33,25,48,0.86); border-color: rgba(255,255,255,0.10); }
+html[data-theme="dark"] .btn { background: rgba(255,255,255,0.08); color: var(--ink); }
+html[data-theme="dark"] .btn.ghost { background: rgba(255,255,255,0.05); }
+html[data-theme="dark"] .btn.primary { color: #241b33; } /* keep pastel gradient, dark text */
+html[data-theme="dark"] .field input, html[data-theme="dark"] .field select, html[data-theme="dark"] .field textarea {
+  background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: var(--ink);
+}
+html[data-theme="dark"] .seg button { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: var(--ink-soft); }
+html[data-theme="dark"] .seg button.on { background: var(--lilac-2); color: var(--ink); }
+html[data-theme="dark"] .toast { background: #2b2140; border-color: rgba(255,255,255,0.12); }
+html[data-theme="dark"] .item .ic { background: rgba(185,164,240,0.18); }
+html[data-theme="dark"] .divider { background: rgba(255,255,255,0.12); }
+html[data-theme="dark"] .code { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+html[data-theme="dark"] .ring .track { stroke: rgba(255,255,255,0.12); }
+html[data-theme="dark"] .ring text { fill: var(--ink); }
+html[data-theme="dark"] .mem-back { background: #2b2140; }
+html[data-theme="dark"] .modal-scrim { background: rgba(0,0,0,0.55); }
+html[data-theme="dark"] a { color: #c4a9ef; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
